@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Your Watchlist</h2>
+    <ul>
+        {% for auction in auctions %}
+        <li>
+            <a href="{% url 'auction' auction.id %}"> {{auction.Name}} by {{auction.lister}} </a>
+        </li>
+        <li>
+            <p> Max bid is made by {{auction.maxbidder}} for {{auction.money}} dollars</p>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

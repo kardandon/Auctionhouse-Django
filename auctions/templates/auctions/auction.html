@@ -1,0 +1,110 @@
+{% extends "auctions/layout.html" %}
+
+{% block nav %}
+<style>
+    .btn-link {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+</style>
+{% if user.is_authenticated %}
+<li class="nav-item">
+    <form method="POST">
+            <input hidden name="sneak" value="watchlist">
+        {% csrf_token %}
+        {% if watched %}
+            <button type="submit" class="nav-link btn-link" name="type" value="remove">Remove from Watchlist</button>
+        {% else %}
+            <button type="submit" class="nav-link btn-link" name="type" value="add">Add to Watchlist</button>
+        {% endif %}
+    </form>
+</li>
+{% endif %}
+{% endblock %}
+{% block body %}
+    <ul style="list-style-type: none;">
+        {% if notFound %}
+            <h1> Auction not found! </h1>
+        {% else %}
+        <li>
+            <h2>
+            {% if auction.Active %}
+            This Auction is Active
+            {% if is_owner %}
+            <form method="POST">
+                {% csrf_token %}
+                <input hidden name="sneak" value="close">
+                <button type="submit" class="nav-link btn-link" name="type" value="remove">Close Auction</button>
+            </form>
+            {% endif %}
+            {% else %}
+            This Auction is closed winner is {{winner}}
+            {% endif %}
+        </h2>
+        </li>
+        <li>
+            <h1>
+                {{auction.Name}}
+            </h1>
+        </li>
+        <li>
+            <img src="{{auction.Pic_url}}" alt="Pic" height="600">
+        </li>
+        <li>
+            <p>
+                Description: {{auction.Description}}
+            </p>
+        </li>
+        <li>
+            <p>
+                Category: {{auction.Category}}
+            </p>
+        </li>
+        <li>
+            <p>
+                Listed by: {{auction.lister}}
+            </p>
+        </li>
+        <li>
+            <p>
+                {{num_bid}} bids are made
+            </p>
+        </li>
+        <li>
+            <p> Maximum bid made by {{max_bidder}} for {{money}} dollars</p>
+        </li>
+            {% if user.is_authenticated and auction.Active %}
+            <li class="nav-item">
+            <form method="POST">
+                    <input hidden name="sneak" value="bidding">
+                {% csrf_token %}
+                    {{bid_form}}
+                    <button type="submit" class="nav-link btn-link" name="type" value="bid">Place Bid</button>
+                    </form>
+                </li>
+            {% endif %}
+            <li>
+                <h3>
+                    Comments
+                </h3>
+            </li>
+            {%for comment in comments %}
+            <li>
+                {{comment}}
+            </li>
+            {% endfor %}
+            <li>
+                <form id="2" method="POST">
+                    {% csrf_token %}
+                    <input hidden name="sneak" value="comment">
+                    {{comment_form}}
+                    <button type="submit" class="nav-link btn-link" name="type" value="comment">Post Comment</button>
+                </form>
+            </li>
+            {% endif %}
+    </ul>
+{% endblock %}

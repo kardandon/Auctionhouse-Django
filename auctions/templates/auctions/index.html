@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if message %}
+    <h2> {{ message }}</h2>
+    {% else %}
+    <h2>Active Listings</h2>
+    {% endif %}
+    <ul>
+        {% for auction in auctions %}
+        <li>
+            <a href="{% url 'auction' auction.id %}"> {{auction.Name}}: {{auction.Description}} last bid: {{auction.Price}} dollars started by {{auction.lister}}</a>
+            <img src="{{auction.Pic_url}}" height="100">
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
