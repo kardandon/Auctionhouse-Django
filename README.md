@@ -1,2 +1,1 @@
-# Auctionhouse-Django
-Django project
+# kardandon
